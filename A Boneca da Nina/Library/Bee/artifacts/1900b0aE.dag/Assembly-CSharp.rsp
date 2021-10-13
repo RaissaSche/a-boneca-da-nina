@@ -328,6 +328,7 @@
 "Assets/Scripts/Level2Manager.cs"
 "Assets/Scripts/Player.cs"
 "Assets/Scripts/Projectile.cs"
+"Assets/Scripts/SpeechBubble.cs"
 "Assets/Scripts/ThrowProjectile.cs"
 "Assets/Scripts/Tiredness Level/SleepyBehaviour.cs"
 "Assets/Scripts/Tiredness Level/YawnBehaviour.cs"
