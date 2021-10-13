@@ -325,7 +325,7 @@
 "Assets/Scripts/Enemy.cs"
 "Assets/Scripts/Follow.cs"
 "Assets/Scripts/JumpAfterTime.cs"
-"Assets/Scripts/Level2Manager.cs"
+"Assets/Scripts/Manager.cs"
 "Assets/Scripts/Player.cs"
 "Assets/Scripts/Projectile.cs"
 "Assets/Scripts/SpeechBubble.cs"
