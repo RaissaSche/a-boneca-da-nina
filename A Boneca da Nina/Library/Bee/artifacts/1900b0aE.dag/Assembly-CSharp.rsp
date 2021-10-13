@@ -318,7 +318,10 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/VSSettingsProvider.ref.dll"
+"Assets/Scripts/BackAndForth.cs"
 "Assets/Scripts/Blink.cs"
+"Assets/Scripts/Cloud.cs"
+"Assets/Scripts/CustomTrigger2D.cs"
 "Assets/Scripts/Enemy.cs"
 "Assets/Scripts/Follow.cs"
 "Assets/Scripts/JumpAfterTime.cs"
@@ -326,8 +329,11 @@
 "Assets/Scripts/Player.cs"
 "Assets/Scripts/Projectile.cs"
 "Assets/Scripts/ThrowProjectile.cs"
+"Assets/Scripts/Tiredness Level/SleepyBehaviour.cs"
+"Assets/Scripts/Tiredness Level/YawnBehaviour.cs"
 "Assets/Scripts/TirednessCollider.cs"
 "Assets/Scripts/TurnSpriteToPlayer.cs"
+"Assets/Scripts/WaterMovement.cs"
 "Assets/Termometro.cs"
 -langversion:8.0
 
