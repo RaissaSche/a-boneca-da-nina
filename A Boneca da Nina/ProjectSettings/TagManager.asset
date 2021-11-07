@@ -6,14 +6,16 @@ TagManager:
   tags:
   - PlayerAttack
   - PlayerDefense
-  - Ground
   - Enemy
   - Cloud
+  - Ground
+  - Tire
+  - Ladder
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
@@ -43,6 +45,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BG
+    uniqueID: 159368335
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public event Action<Player> OnDied;
     //private SoundManager soundManager;
     private bool isJumping = false;
+    private bool isBouncing = false;
 
     // Movement
     [Header("Moviment Attributes")]
@@ -22,7 +23,7 @@ public class Player : MonoBehaviour
     // Jump
     [Header("Jump")]
     [SerializeField]
-    private bool isGrounded;
+    private bool isGrounded, isOnTire;
     [SerializeField]
     [Range(1f, 100f)]
     private float jumpForce = 5f;
@@ -65,9 +66,23 @@ public class Player : MonoBehaviour
     private bool blinking = false;
     private float blinkingDuration = 1f;
 
+    //Climbing
+    [Space(10)]
+    [Header("Climbing")]
+    [SerializeField]
+    private bool isCloseToLadder = false,
+            climbHeld = false,
+            hasStartedClimb = false;
+
+    private Transform ladder;
+    private float vertical = 0f;
+    private float climbSpeed = 0.2f;
+
     private SpriteRenderer sprite;
     private Animator anim;
     private Blink blink;
+
+    private float gravity = 3f;
 
     void Start()
     {
@@ -84,25 +99,9 @@ public class Player : MonoBehaviour
         //defenseTrigger.OnCustomTriggerEnter2D += OnDefenseTrigger;
     }
 
-    private void OnDefenseTrigger(Collider2D obj)
-    {
-        if (obj.gameObject.tag == "EnemyProjectile")
-        {
-            //soundManager.PlaySFX (SoundManager.SFXType.DEFEND);
-            Destroy(obj.gameObject);
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Ground"))
-        {
-            isJumping = false;
-        }
-    }
-
     private void Update()
     {
+        //vertical = Input.GetAxisRaw("Vertical") * climbSpeed;
 
         float h = Input.GetAxis("Horizontal");
 
@@ -147,6 +146,58 @@ public class Player : MonoBehaviour
         {
             blink.StopBlink();
         }
+
+        /*climbHeld = (isCloseToLadder && Input.GetButton("Climb")) ? true : false;
+
+        if (climbHeld)
+        {
+            if (!hasStartedClimb) hasStartedClimb = true;
+        }
+        else
+        {
+            if (hasStartedClimb)
+            {
+                //GetComponent<Animator>().Play("CharacterClimbIdle");
+                Debug.Log("Is climbing!");
+            }
+        }
+
+        // Climbing
+        if (hasStartedClimb && climbHeld)
+        {
+            float height = GetComponent<SpriteRenderer>().size.y;
+            float topHandlerY = Half(ladder.transform.GetChild(0).transform.position.y + height);
+            float bottomHandlerY = Half(ladder.transform.GetChild(1).transform.position.y + height);
+            float transformY = Half(transform.position.y);
+            float transformVY = transformY + vertical;
+
+            if (transformVY > topHandlerY || transformVY < bottomHandlerY)
+            {
+                ResetClimbing();
+            }
+            else if (transformY <= topHandlerY && transformY >= bottomHandlerY)
+            {
+                rb.bodyType = RigidbodyType2D.Kinematic;
+                if (!transform.position.x.Equals(ladder.transform.position.x))
+                {
+                    transform.position = new Vector3(ladder.transform.position.x, transform.position.y, transform.position.z);
+                }
+
+                //GetComponent<Animator>().Play("CharacterClimb");
+                Vector3 forwardDirection = new Vector3(0, transformVY, 0);
+                Vector3 newPos = Vector3.zero;
+
+                if (vertical > 0)
+                {
+                    newPos = transform.position + forwardDirection * Time.deltaTime * climbSpeed;
+                }
+                else if (vertical < 0)
+                {
+                    newPos = transform.position - forwardDirection * Time.deltaTime * climbSpeed;
+                }
+                if (newPos != Vector3.zero) { rb.MovePosition(newPos); }
+            }
+        }*/
     }
 
     private void Move()
@@ -207,15 +258,41 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         isJumping = true;
+        isGrounded = false;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         //soundManager.PlaySFX (SoundManager.SFXType.JUMP);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            isJumping = false;
+            isGrounded = true;
+        }
+        if (collision.collider.CompareTag("Tire"))
+        {
+            if (!isOnTire)
+            {
+                Jump();
+            }
+            isOnTire = true;
+        }
+    }
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy" && !blinking)
         {
             TakeDamage();
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+
+        if (collision.collider.CompareTag("Tire"))
+        {
+            isOnTire = false;
         }
     }
 
@@ -232,6 +309,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag.Equals("Ladder"))
+        {
+            rb.gravityScale = 0.0f;
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 5f);
+            }
+        }
+    }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Cloud")
@@ -239,7 +329,21 @@ public class Player : MonoBehaviour
             Debug.Log("outside!!");
             speedMultiplier = 1f;
         }
+        if (collision.tag == "Ladder")
+        {
+            rb.gravityScale = gravity;
+        }
     }
+
+    private void OnDefenseTrigger(Collider2D obj)
+    {
+        if (obj.gameObject.tag == "EnemyProjectile")
+        {
+            //soundManager.PlaySFX (SoundManager.SFXType.DEFEND);
+            Destroy(obj.gameObject);
+        }
+    }
+
 
     private void TakeDamage()
     {
@@ -254,5 +358,19 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(time);
         blinking = false;
         gameObject.layer = LayerMask.NameToLayer("Player");
+    }
+
+    public static float Half(float value)
+    {
+        return Mathf.Floor(value) + 0.5f;
+    }
+
+    private void ResetClimbing()
+    {
+        if (hasStartedClimb)
+        {
+            hasStartedClimb = false;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
     }
 }
