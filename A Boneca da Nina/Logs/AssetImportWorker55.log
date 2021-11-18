@@ -1,0 +1,21 @@
+Using pre-set license
+Built from '2021.1/staging' branch; Version is '2021.1.3f1 (4bef613afd59) revision 4976481'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Education; OS build 18363.1916; Version 1909; 64bit' Language: 'pt' Physical Memory: 6055 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.1.3f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker55
+-projectPath
+C:/Users/Raissa/Documents/Unisinos/Projeto Final 1/a-boneca-da-nina/A Boneca da Nina
+-logFile
+Logs/AssetImportWorker55.log
+-srvPort
+59772
+Successfully changed project path to: C:/Users/Raissa/Documents/Unisinos/Projeto Final 1/a-boneca-da-nina/A Boneca da Nina
+C:/Users/Raissa/Documents/Unisinos/Projeto Final 1/a-boneca-da-nina/A Boneca da Nina
+Using Asset Import Pipeline V2.
