@@ -11,6 +11,9 @@ TagManager:
   - Ground
   - Tire
   - Ladder
+  - Mom
+  - SlowMom
+  - SlowerMom
   layers:
   - Default
   - TransparentFX
