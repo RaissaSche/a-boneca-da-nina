@@ -295,6 +295,7 @@
 -r:"Library/Bee/artifacts/1900b0aP.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/BackAndForth.cs"
 "Assets/Scripts/Blink.cs"
+"Assets/Scripts/CameraFollow.cs"
 "Assets/Scripts/Cloud.cs"
 "Assets/Scripts/CustomTrigger2D.cs"
 "Assets/Scripts/Enemy.cs"

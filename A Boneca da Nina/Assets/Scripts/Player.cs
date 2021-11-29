@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,11 @@ public class Player : MonoBehaviour
     //private SoundManager soundManager;
     private bool isJumping = false;
     private bool isBouncing = false;
+
+    //items
+    [Header("Items collection")]
+    public Text textComponent;
+    public int itemsCollected = 0;
 
     // Movement
     [Header("Moviment Attributes")]
@@ -97,6 +101,7 @@ public class Player : MonoBehaviour
         //defenseTrigger = transform.Find ("DefenseTrigger").
         // GetComponentInChildren<CustomTrigger2D> ();
         //defenseTrigger.OnCustomTriggerEnter2D += OnDefenseTrigger;
+        textComponent.text = "x" + itemsCollected;
     }
 
     private void Update()
@@ -304,8 +309,13 @@ public class Player : MonoBehaviour
         }
         if (collision.tag == "Cloud")
         {
-            Debug.Log("cloud!!");
             speedMultiplier = 0.5f;
+        }
+        if (collision.tag == "Item")
+        {
+            itemsCollected++;
+            textComponent.text = "x" + itemsCollected;
+            Destroy(collision.gameObject);
         }
     }
 
