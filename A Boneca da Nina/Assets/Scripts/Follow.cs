@@ -40,25 +40,37 @@ public class Follow : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        bool auxCollider = collider.gameObject.GetComponent<SlowMom>().getHasPassed() == false;
+
         if (offset.x <= offsetOriginal.x)
         {
-            if (collider.CompareTag("SlowMom"))
+            if (collider.CompareTag("SlowMom") && auxCollider == false)
             {
                 newX = transform.position.x + delaySlow;
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newX, transform.position.y, transform.position.z), move);
                 offset.x = newX;
+                collider.gameObject.GetComponent<SlowMom>().setHasPassed(true);
             }
-            else if (collider.CompareTag("SlowerMom"))
+            else if (collider.CompareTag("SlowerMom") && auxCollider == false)
             {
                 newX = transform.position.x + delaySlower;
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newX, transform.position.y, transform.position.z), move);
                 offset.x = newX;
+                collider.gameObject.GetComponent<SlowMom>().setHasPassed(true);
             }
         }
         //se ficar parada (mesma posição por x tempo), somar ao offset até o valor original
         else
         {
             transform.position = objectToFollow.position - offset;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.CompareTag("SlowMom") || collider.CompareTag("SlowerMom"))
+        {
+         transform.position = objectToFollow.position - offset;
         }
     }
 }

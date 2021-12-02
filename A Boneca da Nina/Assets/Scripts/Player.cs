@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     [Range(1f, 100f)]
     private float jumpForce = 5f;
+    [Range(1f, 100f)]
+    public float jumpForceTire = 5f;
     public Transform groundCheck;
     public LayerMask groundLayer;
 
@@ -118,7 +120,7 @@ public class Player : MonoBehaviour
         if (Input.GetAxis("Horizontal") != 0f)
             Move();
         if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && !isJumping)
-            Jump();
+            Jump(false);
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -151,58 +153,6 @@ public class Player : MonoBehaviour
         {
             blink.StopBlink();
         }
-
-        /*climbHeld = (isCloseToLadder && Input.GetButton("Climb")) ? true : false;
-
-        if (climbHeld)
-        {
-            if (!hasStartedClimb) hasStartedClimb = true;
-        }
-        else
-        {
-            if (hasStartedClimb)
-            {
-                //GetComponent<Animator>().Play("CharacterClimbIdle");
-                Debug.Log("Is climbing!");
-            }
-        }
-
-        // Climbing
-        if (hasStartedClimb && climbHeld)
-        {
-            float height = GetComponent<SpriteRenderer>().size.y;
-            float topHandlerY = Half(ladder.transform.GetChild(0).transform.position.y + height);
-            float bottomHandlerY = Half(ladder.transform.GetChild(1).transform.position.y + height);
-            float transformY = Half(transform.position.y);
-            float transformVY = transformY + vertical;
-
-            if (transformVY > topHandlerY || transformVY < bottomHandlerY)
-            {
-                ResetClimbing();
-            }
-            else if (transformY <= topHandlerY && transformY >= bottomHandlerY)
-            {
-                rb.bodyType = RigidbodyType2D.Kinematic;
-                if (!transform.position.x.Equals(ladder.transform.position.x))
-                {
-                    transform.position = new Vector3(ladder.transform.position.x, transform.position.y, transform.position.z);
-                }
-
-                //GetComponent<Animator>().Play("CharacterClimb");
-                Vector3 forwardDirection = new Vector3(0, transformVY, 0);
-                Vector3 newPos = Vector3.zero;
-
-                if (vertical > 0)
-                {
-                    newPos = transform.position + forwardDirection * Time.deltaTime * climbSpeed;
-                }
-                else if (vertical < 0)
-                {
-                    newPos = transform.position - forwardDirection * Time.deltaTime * climbSpeed;
-                }
-                if (newPos != Vector3.zero) { rb.MovePosition(newPos); }
-            }
-        }*/
     }
 
     private void Move()
@@ -260,11 +210,18 @@ public class Player : MonoBehaviour
             speedMultiplier *= defenseSpeedMultiplier;
     }
 
-    private void Jump()
+    private void Jump(bool isOnTire)
     {
         isJumping = true;
         isGrounded = false;
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        if (isOnTire)
+        {
+            rb.AddForce(Vector2.up * jumpForceTire, ForceMode2D.Impulse);
+        }
+        else
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
         //soundManager.PlaySFX (SoundManager.SFXType.JUMP);
     }
 
@@ -279,9 +236,10 @@ public class Player : MonoBehaviour
         {
             if (!isOnTire)
             {
-                Jump();
+                isOnTire = true;
+                Jump(isOnTire);
             }
-            isOnTire = true;
+
         }
     }
     private void OnCollisionStay2D(Collision2D collision)
