@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MouseCursor : MonoBehaviour {
 
 	void Start () {
-		Cursor.visible = false;
+		//Cursor.visible = false;
 	}
 
 	void Update () {

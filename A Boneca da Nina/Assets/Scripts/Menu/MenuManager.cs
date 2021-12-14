@@ -1,51 +1,44 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuManager : MonoBehaviour {
-
-    //public CanvasFade fade;
-    private string nextScene;
+public class MenuManager : MonoBehaviour
+{
 
     public GameObject mainMenuPanel;
     public GameObject creditsPanel;
 
-    void Start () {
-        //fade.FadeIn ();
+    private void Start()
+    {
+        Cursor.visible = true;
     }
 
-    private void Update () {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            ScreenCapture.CaptureScreenshot("Nina.png");
-        }
-    }
-
-    public void OpenScene (string scene) {
-        //if (fade.Fading)
-            //return;
-        //nextScene = scene;
-        SceneManager.LoadScene(scene);
-        //fade.OnFadeEnd += ChangeScene;
-        //fade.FadeOut (1f, 0.5f);
-    }
-
-    public void QuitGame () {
-        Application.Quit ();
-    }
-
-    /*private void ChangeScene (CanvasFade obj, bool fadeIn) {
-        SceneManager.LoadScene (nextScene);
+    //private void Update () {
+    /*if (Input.GetKeyDown(KeyCode.Return))
+    {
+        ScreenCapture.CaptureScreenshot("Nina.png");
     }*/
+    //}
 
-    public void CreditsClicked () {
-        mainMenuPanel.SetActive (false);
-        creditsPanel.SetActive (true);
+    public void OpenScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
     }
 
-    public void BackButtonClicked () {
-        mainMenuPanel.SetActive (true);
-        creditsPanel.SetActive (false);
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+
+    public void CreditsClicked()
+    {
+        mainMenuPanel.SetActive(false);
+        creditsPanel.SetActive(true);
+    }
+
+    public void BackButtonClicked()
+    {
+        mainMenuPanel.SetActive(true);
+        creditsPanel.SetActive(false);
     }
 }

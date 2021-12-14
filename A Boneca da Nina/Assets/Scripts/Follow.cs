@@ -13,6 +13,10 @@ public class Follow : MonoBehaviour
     {
         offset = offsetOriginal;
         move = Time.deltaTime * moveSpeed;
+
+        var agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
     }
 
     void Update()
@@ -40,18 +44,16 @@ public class Follow : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        bool auxCollider = collider.gameObject.GetComponent<SlowMom>().getHasPassed() == false;
-
         if (offset.x <= offsetOriginal.x)
         {
-            if (collider.CompareTag("SlowMom") && auxCollider == false)
+            if (collider.CompareTag("SlowMom") && !collider.gameObject.GetComponent<SlowMom>().getHasPassed())
             {
                 newX = transform.position.x + delaySlow;
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newX, transform.position.y, transform.position.z), move);
                 offset.x = newX;
                 collider.gameObject.GetComponent<SlowMom>().setHasPassed(true);
             }
-            else if (collider.CompareTag("SlowerMom") && auxCollider == false)
+            else if (collider.CompareTag("SlowerMom") && !collider.gameObject.GetComponent<SlowMom>().getHasPassed())
             {
                 newX = transform.position.x + delaySlower;
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(newX, transform.position.y, transform.position.z), move);
@@ -70,7 +72,7 @@ public class Follow : MonoBehaviour
     {
         if (collider.CompareTag("SlowMom") || collider.CompareTag("SlowerMom"))
         {
-         transform.position = objectToFollow.position - offset;
+            transform.position = objectToFollow.position - offset;
         }
     }
 }

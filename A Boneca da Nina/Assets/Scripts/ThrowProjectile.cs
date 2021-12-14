@@ -41,7 +41,7 @@ public class ThrowProjectile : MonoBehaviour {
     private void Shoot () {
         Projectile proj = Instantiate (projectilePrefab, transform.position, Quaternion.identity).GetComponent<Projectile> ();
         proj.direction = player.transform.position;
-        //SoundManager.instance.PlaySFX (SoundManager.SFXType.ENEMY_SHOOT, 0.8f);
+        SoundManager.instance.PlaySFX (SoundManager.SFXType.ENEMY_SHOOT, 0.8f);
     }
 
     private void OnTriggerEnter2D (Collider2D collision) {

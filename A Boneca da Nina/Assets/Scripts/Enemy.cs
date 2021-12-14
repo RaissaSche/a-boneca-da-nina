@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour {
             Invoke ("ResetCanBeHit", hitCooldown);
             canBeHit = false;
             health--;
-            //SoundManager.instance.PlaySFXAtPosition (SoundManager.SFXType.ENEMY_HIT, transform.position, 0.8f);
+            SoundManager.instance.PlaySFXAtPosition (SoundManager.SFXType.ENEMY_HIT, transform.position, 0.8f);
             if (health <= 0) {
                 Destroy (gameObject);
                 return;

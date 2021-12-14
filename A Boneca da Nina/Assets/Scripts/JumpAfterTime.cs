@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class JumpAfterTime : MonoBehaviour {
-/*
+
     public Rigidbody2D rb;
     public Vector2 jumpForce;
     public float timeBetweenJumps;
@@ -20,5 +20,4 @@ public class JumpAfterTime : MonoBehaviour {
         rb.AddForce (jumpForce, ForceMode2D.Impulse);
         SoundManager.instance.PlaySFXAtPosition (SoundManager.SFXType.JUMP, transform.position, 0.5f);
     }
-    */
 }

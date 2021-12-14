@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -76,9 +77,7 @@ public class Player : MonoBehaviour
     [Space(10)]
     [Header("Climbing")]
     [SerializeField]
-    private bool isCloseToLadder = false,
-            climbHeld = false,
-            hasStartedClimb = false;
+    private bool hasStartedClimb = false;
 
     private Transform ladder;
     private float vertical = 0f;
@@ -274,6 +273,10 @@ public class Player : MonoBehaviour
             itemsCollected++;
             textComponent.text = "x" + itemsCollected;
             Destroy(collision.gameObject);
+        }
+        if (collision.tag == "FinalBarrier")
+        {
+            SceneManager.LoadScene("Cutscene1");
         }
     }
 
