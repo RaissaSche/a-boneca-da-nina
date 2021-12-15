@@ -508,6 +508,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1748705382264230, guid: 0e37cf979ce501b47a26acb8ea59d733, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1891056428477774, guid: 0e37cf979ce501b47a26acb8ea59d733, type: 3}
       propertyPath: m_Name
       value: CanvasPrefab 1
@@ -655,6 +659,14 @@ PrefabInstance:
     - target: {fileID: 224278550695328970, guid: 0e37cf979ce501b47a26acb8ea59d733, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224608721702963200, guid: 0e37cf979ce501b47a26acb8ea59d733, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 224608721702963200, guid: 0e37cf979ce501b47a26acb8ea59d733, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -160
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e37cf979ce501b47a26acb8ea59d733, type: 3}
