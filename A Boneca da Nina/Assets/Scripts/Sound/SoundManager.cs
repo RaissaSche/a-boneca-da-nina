@@ -22,7 +22,6 @@ public class SoundManager : MonoBehaviour {
         SAD_UKULELE_SONG,
         FOR_A_BONECA_DA_NINA,
         NONE
-
     }
 
     public enum SFXType {
@@ -32,7 +31,7 @@ public class SoundManager : MonoBehaviour {
         DEFEND,
         PLAYER_ATTACK,
         ENEMY_HIT,
-        GABI_SFX,
+        NINA_SFX,
         PAINTING_SFX,
         SILENCE_SIGN_SFX,
         SEAT_SFX,
@@ -122,7 +121,7 @@ public class SoundManager : MonoBehaviour {
             return playerAttackClip;
         else if (sfxType == SFXType.ENEMY_HIT)
             return enemyHitClips[Random.Range (0, enemyHitClips.Count)];
-        else if (sfxType == SFXType.GABI_SFX)
+        else if (sfxType == SFXType.NINA_SFX)
             return lvl1Clips[0];
         else if (sfxType == SFXType.PAINTING_SFX)
             return lvl1Clips[1];
