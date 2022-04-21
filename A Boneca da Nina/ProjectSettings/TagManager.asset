@@ -16,6 +16,8 @@ TagManager:
   - SlowerMom
   - Item
   - FinalBarrier
+  - FinalBarrier2
+  - MomDoor
   layers:
   - Default
   - TransparentFX
