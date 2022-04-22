@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class ChangeSceneButton : MonoBehaviour
 {
-  public void ChangeScene(string sceneName)
+    public CanvasFade fade;
+    public void ChangeScene(string sceneName)
     {
+        fade.FadeOut();
         LevelManager.Instance.OpenScene(sceneName);
     }
 }

@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private bool isJumping = false;
 
     public GameObject mom;
+    public CanvasFade fade;
 
     //Items
     [Header("Items collection")]
@@ -174,10 +175,12 @@ public class Player : MonoBehaviour
         }
         if (collision.tag == "FinalBarrier")
         {
+            fade.FadeOut();
             LevelManager.Instance.OpenScene("Cutscene1");
         }
         if (collision.tag == "FinalBarrier2")
         {
+            fade.FadeOut();
             LevelManager.Instance.OpenScene("Cutscene2");
         }
         if (collision.tag == "MomDoor")
