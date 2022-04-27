@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -7,19 +5,19 @@ using System.Threading.Tasks;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _loadingCanvas;
-    [SerializeField] private GameObject _otherCanvas;
-    [SerializeField] private Image _progressBar;
+    [SerializeField] private GameObject loadingCanvas;
+    [SerializeField] private GameObject otherCanvas;
+    [SerializeField] private Image progressBar;
 
     private float _target;
-    public static LevelManager Instance;
-    private SoundManager soundManager;
+    public static LevelManager instance;
+    private SoundManager _soundManager;
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -30,24 +28,24 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        soundManager = SoundManager.instance;
+        _soundManager = SoundManager.Instance;
     }
 
     public void Update()
     {
-        _progressBar.fillAmount = Mathf.MoveTowards(_progressBar.fillAmount, _target, 3 * Time.deltaTime);
+        progressBar.fillAmount = Mathf.MoveTowards(progressBar.fillAmount, _target, 3 * Time.deltaTime);
     }
 
     public async void OpenScene(string sceneName)
     {
         _target = 0;
-        _progressBar.fillAmount = 0;
+        progressBar.fillAmount = 0;
 
-        soundManager.PlaySFX(SoundManager.SFXType.CLICK, 0.5f);
+        _soundManager.PlaySfx(SoundManager.SfxType.CLICK_SFX, 0.7f);
         var scene = SceneManager.LoadSceneAsync(sceneName);
         scene.allowSceneActivation = false;
 
-        _loadingCanvas.SetActive(true);
+        loadingCanvas.SetActive(true);
 
         do
         {
@@ -56,11 +54,11 @@ public class LevelManager : MonoBehaviour
 
         } while (scene.progress < 0.89); //0.9 is when the scene is loaded
 
-        //await Task.Delay(2000);
+        await Task.Delay(2000);
 
         scene.allowSceneActivation = true;
 
-        _otherCanvas.SetActive(false);
-        _loadingCanvas.SetActive(false);
+        otherCanvas.SetActive(false);
+        loadingCanvas.SetActive(false);
     }
 }

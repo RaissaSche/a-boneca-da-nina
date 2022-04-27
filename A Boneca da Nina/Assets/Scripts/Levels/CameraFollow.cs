@@ -17,6 +17,6 @@ public class CameraFollow : MonoBehaviour
     {
         Vector3 offsettedTargetPosition = target.position + offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, offsettedTargetPosition, smoothFactor * Time.fixedDeltaTime);
-        transform.position = offsettedTargetPosition;
+        transform.position = smoothedPosition;
     }
 }

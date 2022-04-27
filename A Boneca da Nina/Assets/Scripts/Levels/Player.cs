@@ -6,10 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    private SoundManager soundManager;
-    public AudioLowPassFilter filter;
-    private bool isJumping = false;
-
+    private SoundManager _soundManager;
+    private bool _isJumping = false;
     public GameObject mom;
     public CanvasFade fade;
 
@@ -20,12 +18,12 @@ public class Player : MonoBehaviour
     public ParticleSystem stars;
 
     // Movement
-    [Header("Moviment Attributes")]
+    [Header("Movement Attributes")]
     public Rigidbody2D rb;
     [SerializeField]
     [Range(0f, 10f)]
     private float moveSpeed = 3f;
-    private float speedMultiplier = 1f;
+    private float _speedMultiplier = 1f;
 
     // Jump
     [Header("Jump")]
@@ -43,24 +41,25 @@ public class Player : MonoBehaviour
     [Space(10)]
     [Header("Climbing")]
     [SerializeField]
-    private bool hasStartedClimb = false;
+    //private bool hasStartedClimb = false;
     public SpriteRenderer sprite;
 
-    private Transform ladder;
-    private float vertical = 0f;
-    private float climbSpeed = 0.2f;
+    //private Transform ladder;
+    //private float vertical = 0f;
+    //private float climbSpeed = 0.2f;
 
-    private Animator anim;
+    private Animator _animator;
 
     private float gravity = 3f;
 
     void Start()
     {
-        soundManager = SoundManager.instance;
+        _soundManager = SoundManager.Instance;
 
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
         textComponent.text = "x" + itemsCollected;
+        //filter = soundManager.GetComponent<AudioLowPassFilter>();
     }
 
     private void Update()
@@ -85,7 +84,7 @@ public class Player : MonoBehaviour
         }
 
         if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            && !isJumping)
+            && !_isJumping)
         {
             Jump(false);
         }
@@ -98,7 +97,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed * speedMultiplier, rb.velocity.y);
+        rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed * _speedMultiplier, rb.velocity.y);
     }
 
     public void SetMoveSpeed(float moveSpeed)
@@ -113,25 +112,25 @@ public class Player : MonoBehaviour
 
     private void Jump(bool isOnTire)
     {
-        isJumping = true;
+        _isJumping = true;
         isGrounded = false;
         if (isOnTire)
         {
             rb.AddForce(Vector2.up * jumpForceTire, ForceMode2D.Impulse);
-            soundManager.PlaySFX(SoundManager.SFXType.SEAT_SFX, 0.7f);
+            _soundManager.PlaySfx(SoundManager.SfxType.SEAT_SFX, 0.7f);
         }
         else
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
-        soundManager.PlaySFX(SoundManager.SFXType.JUMP, 0.7f);
+        _soundManager.PlaySfx(SoundManager.SfxType.JUMP_SFX, 0.7f);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))
         {
-            isJumping = false;
+            _isJumping = false;
             isGrounded = true;
         }
         if (collision.collider.CompareTag("Tire"))
@@ -154,14 +153,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    [Obsolete("Obsolete")]
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Cloud")
+        if (collision.CompareTag("Cloud"))
         {
-            filter.cutoffFrequency = 1800;
-            speedMultiplier = 0.5f;
+            _soundManager.GetLowPassFilter().cutoffFrequency = 1800;
+            _speedMultiplier = 0.5f;
         }
-        if (collision.tag == "Item")
+        if (collision.CompareTag("Item"))
         {
             itemsCollected++;
             textComponent.text = "x" + itemsCollected;
@@ -170,25 +170,33 @@ public class Player : MonoBehaviour
             stars.enableEmission = true;
             stars.Play();            
             StartCoroutine(StopStars(collision.gameObject));
-            soundManager.PlaySFX(SoundManager.SFXType.NINA_SFX, 0.7f);
+            _soundManager.PlaySfx(SoundManager.SfxType.GIGGLE_SFX, 0.7f);
 
         }
-        if (collision.tag == "FinalBarrier")
+        if (collision.CompareTag("FinalBarrier"))
         {
             fade.FadeOut();
-            LevelManager.Instance.OpenScene("Cutscene1");
+            LevelManager.instance.OpenScene("Cutscene1");
         }
-        if (collision.tag == "FinalBarrier2")
+        if (collision.CompareTag("FinalBarrier2"))
         {
             fade.FadeOut();
-            LevelManager.Instance.OpenScene("Cutscene2");
+            LevelManager.instance.OpenScene("Cutscene2");
         }
-        if (collision.tag == "MomDoor")
+        if (collision.CompareTag("CommonDoor")) {
+            _soundManager.PlaySfx(SoundManager.SfxType.DOOR_SFX);
+        }
+        if (collision.CompareTag("SushSign")) {
+            _soundManager.PlaySfx(SoundManager.SfxType.SILENCE_SIGN_SFX);
+        }
+        if (collision.CompareTag("MomDoor"))
         {
             mom.SetActive(false);
+            _soundManager.PlayBackgroundMusic(SoundManager.BGMType.LEVEL_2, 1f);
         }
     }
 
+    [Obsolete("Obsolete")]
     IEnumerator StopStars(GameObject item)
     {
         // Stops particle effect
@@ -217,12 +225,12 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Cloud")
+        if (collision.CompareTag("Cloud"))
         {
-            filter.cutoffFrequency = 20000;
-            speedMultiplier = 1f;
+            _soundManager.GetLowPassFilter().cutoffFrequency = 20000;
+            _speedMultiplier = 1f;
         }
-        if (collision.tag == "Ladder")
+        if (collision.CompareTag("Ladder"))
         {
             rb.gravityScale = gravity;
         }

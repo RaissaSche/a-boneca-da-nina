@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class JumpAfterTime : MonoBehaviour {
 
@@ -8,16 +6,18 @@ public class JumpAfterTime : MonoBehaviour {
     public Vector2 jumpForce;
     public float timeBetweenJumps;
 
-    void Start () {
-        rb = GetComponent<Rigidbody2D> ();
-        if (timeBetweenJumps >= 0f)
-            InvokeRepeating ("Jump", timeBetweenJumps, timeBetweenJumps);
-        else
-            Jump ();
+    void Start() {
+        rb = GetComponent<Rigidbody2D>();
+        if (timeBetweenJumps >= 0f) {
+            InvokeRepeating(nameof(Jump), timeBetweenJumps, timeBetweenJumps);
+        }
+        else {
+            Jump();
+        }
     }
 
-    private void Jump () {
-        rb.AddForce (jumpForce, ForceMode2D.Impulse);
-        SoundManager.instance.PlaySFXAtPosition (SoundManager.SFXType.JUMP, transform.position, 0.5f);
+    private void Jump() {
+        rb.AddForce(jumpForce, ForceMode2D.Impulse);
+        SoundManager.Instance.PlaySfxAtPosition(SoundManager.SfxType.JUMP_SFX, transform.position, 0.5f);
     }
 }

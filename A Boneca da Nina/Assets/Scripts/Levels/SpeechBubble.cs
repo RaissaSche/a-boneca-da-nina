@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpeechBubble : MonoBehaviour
@@ -7,24 +5,24 @@ public class SpeechBubble : MonoBehaviour
     public float targetTimeOriginal;
     [SerializeField]
     private float targetTime;
-    private bool flag = true;
-    private Color color;
+    private bool _flag = true;
+    private Color _color;
 
     void Start()
     {
-        color = GetComponent<SpriteRenderer>().color;
+        _color = GetComponent<SpriteRenderer>().color;
 
-        if (flag)
+        if (_flag)
         {
             //set alpha to zero
-            color.a = 0f;
-            GetComponent<SpriteRenderer>().color = color;
+            _color.a = 0f;
+            GetComponent<SpriteRenderer>().color = _color;
         }
         else
         {
             //set alpha to 1
-            color.a = 1f;
-            GetComponent<SpriteRenderer>().color = color;
+            _color.a = 1f;
+            GetComponent<SpriteRenderer>().color = _color;
         }
     }
 
@@ -35,26 +33,26 @@ public class SpeechBubble : MonoBehaviour
 
         if (targetTime <= 0.0f)
         {
-            timerEnded();
+            TimerEnded();
         }
     }
 
-    void timerEnded()
+    void TimerEnded()
     {
-        flag = !flag;
+        _flag = !_flag;
         targetTime = targetTimeOriginal;
 
-        if (flag)
+        if (_flag)
         {
             //set alpha to 1
-            color.a = 1f;
-            GetComponent<SpriteRenderer>().color = color;
+            _color.a = 1f;
+            GetComponent<SpriteRenderer>().color = _color;
         }
         else
         {
             //set alpha to 0
-            color.a = 0f;
-            GetComponent<SpriteRenderer>().color = color;
+            _color.a = 0f;
+            GetComponent<SpriteRenderer>().color = _color;
         }
     }
 }

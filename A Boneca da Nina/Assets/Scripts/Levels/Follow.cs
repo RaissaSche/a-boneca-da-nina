@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class Follow : MonoBehaviour
-{
+public class Follow : MonoBehaviour {
+    
     public Transform objectToFollow;
     public Transform beginningOfLevel;
     public Transform endOfLevel;
@@ -11,44 +11,52 @@ public class Follow : MonoBehaviour
 
     public float offset;
     public float mostFarMomCanBe;
-    private float xOfFartestPositionReached;
+    private float _xOfFarthestPositionReached;
 
-    public SpriteRenderer sprite;  
+    public SpriteRenderer sprite;
 
-    void Update()
-    {
-        //não aumentar a velocidade se voltar na fase
-        if (transform.position.x > xOfFartestPositionReached)
-        {
-            xOfFartestPositionReached = transform.position.x;
+    void Update() {
+        //nï¿½o aumentar a velocidade se voltar na fase
+        if (transform.position.x > _xOfFarthestPositionReached) {
+            _xOfFarthestPositionReached = transform.position.x;
         }
 
         //porcentagem normalizada de progresso na fase
-        float progression = 1 / (endOfLevel.position.x - beginningOfLevel.position.x) * 
-            (xOfFartestPositionReached - beginningOfLevel.position.x);
+        var beginningOfLevelPosition = beginningOfLevel.position;
+        
+        float progression = 1 / (endOfLevel.position.x - beginningOfLevelPosition.x) *
+                            (_xOfFarthestPositionReached - beginningOfLevelPosition.x);
 
-        //velocidade da mãe baseada nas configurações de velocidade objetivo pro começo e pro fim da fase
+        //velocidade da mï¿½e baseada nas configuraï¿½ï¿½es de velocidade objetivo pro comeï¿½o e pro fim da fase
         float momSpeed = initialSpeed - progression * (initialSpeed - finalSpeed);
 
-        //nova posição da mãe baseada na velocidade obtida e no offset da Nina
-       Vector3 newMomPosition = new Vector3(Mathf.MoveTowards(
-            transform.position.x, objectToFollow.position.x + offset, momSpeed * Time.deltaTime),
-            objectToFollow.position.y,
+        //nova posiï¿½ï¿½o da mï¿½e baseada na velocidade obtida e no offset da Nina
+        var objectToFollowPosition = objectToFollow.position;
+        
+        Vector3 newMomPosition = new Vector3(Mathf.MoveTowards(
+                transform.position.x, objectToFollowPosition.x + offset, momSpeed * Time.deltaTime),
+            objectToFollowPosition.y,
             transform.position.z);
 
-        //impedir que a mãe se afaste além do limite estipulado na mostFarMomCanBe
-        if (newMomPosition.x > objectToFollow.position.x - mostFarMomCanBe)
-        {
+        //impedir que a mï¿½e se afaste alï¿½m do limite estipulado na mostFarMomCanBe
+        if (newMomPosition.x > objectToFollow.position.x - mostFarMomCanBe) {
             transform.position = newMomPosition;
         }
-        else
-        {
+        else {
             transform.position = new Vector3(objectToFollow.position.x - mostFarMomCanBe,
-                objectToFollow.position.y,
-                objectToFollow.position.z);
+                objectToFollowPosition.y,
+                objectToFollowPosition.z);
         }
 
-        //virar pra mãe sempre estar olhando pra Nina <3
+        //virar pra mï¿½e sempre estar olhando pra Nina <3
         sprite.flipX = objectToFollow.position.x < transform.position.x;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("MomComesCloser")) {
+            mostFarMomCanBe = 7;
+            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<Rigidbody2D>().isKinematic = true;
+        }
     }
 }

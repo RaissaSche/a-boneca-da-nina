@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayBGMOnAwake : MonoBehaviour {
 
@@ -8,6 +6,6 @@ public class PlayBGMOnAwake : MonoBehaviour {
     public float volume = 1f;
 
     private void Awake () {
-        SoundManager.instance.PlayBackgroundMusic (bgm, volume);
+        SoundManager.Instance.PlayBackgroundMusic (bgm, volume);
     }
 }

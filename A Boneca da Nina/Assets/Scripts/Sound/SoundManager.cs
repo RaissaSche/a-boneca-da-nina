@@ -1,136 +1,134 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour {
 
     #region Singleton
-    static private SoundManager _instance;
-    static public SoundManager instance {
+
+    private static SoundManager _instance;
+
+    public static SoundManager Instance {
         get {
             if (_instance == null) {
-                _instance = new GameObject ("SoundManager", typeof (SoundManager)).GetComponent<SoundManager> ();
-                DontDestroyOnLoad (_instance);
+                _instance = new GameObject("SoundManager", typeof(SoundManager)).GetComponent<SoundManager>();
+                DontDestroyOnLoad(_instance);
             }
+
             return _instance;
         }
     }
+
     #endregion
 
     public enum BGMType {
-        BENSOUND_CUTE,
-        SAD_UKULELE_SONG,
         FOR_A_BONECA_DA_NINA,
+        LEVEL_1,
+        CUTSCENE_1,
+        LEVEL_2,
+        CUTSCENE_2,
         NONE
     }
 
-    public enum SFXType {
-        CLICK,
-        JUMP,
-        ENEMY_SHOOT,
-        DEFEND,
-        PLAYER_ATTACK,
-        ENEMY_HIT,
-        NINA_SFX,
-        PAINTING_SFX,
+    public enum SfxType {
+        CLICK_SFX,
+        JUMP_SFX,
+        GIGGLE_SFX,
         SILENCE_SIGN_SFX,
         SEAT_SFX,
         DOOR_SFX
     }
 
-    public List<AudioClip> bgmClips = new List<AudioClip> ();
-    public List<AudioClip> enemyHitClips = new List<AudioClip> ();
-    public List<AudioClip> lvl1Clips = new List<AudioClip> ();
-    public List<AudioClip> boingClips = new List<AudioClip> ();
-    public AudioClip clickClip;
-    public AudioClip jumpClip;
-    public AudioClip enemyShootClip;
-    public AudioClip defendClip;
-    public AudioClip playerAttackClip;
+    public List<AudioClip> bgmClips = new List<AudioClip>();
+    public List<AudioClip> boingClips = new List<AudioClip>();
+    public AudioClip clickClip, jumpClip, giggleClip, shushClip, doorClip;
     public AudioSource bgmSource;
+    public AudioLowPassFilter lowPassFilter;
 
-    private BGMType currentBGMType = BGMType.NONE;
+    private BGMType _currentBGMType = BGMType.NONE;
 
-    private void Awake () {
-        bgmSource = new GameObject ("BGMAudioSource", typeof (AudioSource)).GetComponent<AudioSource> ();
-        bgmSource.transform.parent = transform;
-        bgmSource.transform.localPosition = Vector3.zero;
+    private void Awake() {
+        bgmSource = new GameObject("BGMAudioSource", typeof(AudioSource)).GetComponent<AudioSource>();
+        var bgmSourceTransform = bgmSource.transform;
+        bgmSourceTransform.parent = transform;
+        bgmSourceTransform.localPosition = Vector3.zero;
         bgmSource.playOnAwake = false;
         bgmSource.loop = true;
 
-        bgmClips.Add (Resources.Load<AudioClip> ("Music/BensoundCute"));
-        bgmClips.Add (Resources.Load<AudioClip> ("Music/SadUkuleleSong"));
-        bgmClips.Add (Resources.Load<AudioClip> ("Music/ForABonecadaNina"));
+        bgmSource.AddComponent<AudioLowPassFilter>();
+        lowPassFilter = bgmSource.GetComponent<AudioLowPassFilter>();
+        bgmSource.GetComponent<AudioLowPassFilter>().cutoffFrequency = 20000;
 
-        enemyHitClips.Add (Resources.Load<AudioClip> ("SFX/EnemyHit1"));
-        enemyHitClips.Add (Resources.Load<AudioClip> ("SFX/EnemyHit2"));
+        bgmClips.Add(Resources.Load<AudioClip>("Music/ForABonecaDaNina"));
+        bgmClips.Add(Resources.Load<AudioClip>("Music/ForABonecaDaNina-Level1"));
+        bgmClips.Add(Resources.Load<AudioClip>("Music/ForABonecaDaNina"));
+        bgmClips.Add(Resources.Load<AudioClip>("Music/ForABonecaDaNina-Level2"));
+        bgmClips.Add(Resources.Load<AudioClip>("Music/ForABonecaDaNina-Cutscene2"));
 
-        lvl1Clips.Add (Resources.Load<AudioClip> ("SFX/Giggle"));
-        lvl1Clips.Add (Resources.Load<AudioClip> ("SFX/Beach"));
-        lvl1Clips.Add (Resources.Load<AudioClip> ("SFX/Shush"));
-        lvl1Clips.Add (Resources.Load<AudioClip> ("SFX/KnockingOnDoor"));
+        boingClips.Add(Resources.Load<AudioClip>("SFX/Boing1"));
+        boingClips.Add(Resources.Load<AudioClip>("SFX/Boing2"));
+        boingClips.Add(Resources.Load<AudioClip>("SFX/Boing3"));
+        boingClips.Add(Resources.Load<AudioClip>("SFX/Boing4"));
+        boingClips.Add(Resources.Load<AudioClip>("SFX/Boing5"));
+        boingClips.Add(Resources.Load<AudioClip>("SFX/Boing6"));
 
-        boingClips.Add (Resources.Load<AudioClip> ("SFX/Boing1"));
-        boingClips.Add (Resources.Load<AudioClip> ("SFX/Boing2"));
-        boingClips.Add (Resources.Load<AudioClip> ("SFX/Boing3"));
-        boingClips.Add (Resources.Load<AudioClip> ("SFX/Boing4"));
-        boingClips.Add (Resources.Load<AudioClip> ("SFX/Boing5"));
-        boingClips.Add (Resources.Load<AudioClip> ("SFX/Boing6"));
-
-        clickClip = Resources.Load<AudioClip> ("SFX/ButtonClick");
-        jumpClip = Resources.Load<AudioClip> ("SFX/Jump");
-        playerAttackClip = Resources.Load<AudioClip> ("SFX/PlayerAttack");
-        defendClip = Resources.Load<AudioClip> ("SFX/Defend");
-        enemyShootClip = Resources.Load<AudioClip> ("SFX/EnemyShot");
-        //buttonPressClip = Resources.Load<AudioClip>("Sounds/SFX/Other SFX/Button Press");
+        giggleClip = Resources.Load<AudioClip>("SFX/Giggle");
+        shushClip = Resources.Load<AudioClip>("SFX/Shush");
+        doorClip = Resources.Load<AudioClip>("SFX/KnockingOnDoor");
+        clickClip = Resources.Load<AudioClip>("SFX/ButtonClick");
+        jumpClip = Resources.Load<AudioClip>("SFX/Jump");
     }
 
-    public void InvertSound () {
+    public void InvertSound() {
         AudioListener.volume = 1f - AudioListener.volume;
     }
 
-    public void PlayBackgroundMusic (BGMType bgType, float volume) {
-        if (currentBGMType == bgType)
+    public AudioLowPassFilter GetLowPassFilter() {
+        return lowPassFilter;
+    }
+
+    public void PlayBackgroundMusic(BGMType bgType, float volume) {
+        if (_currentBGMType == bgType)
             return;
 
-        currentBGMType = bgType;
+        _currentBGMType = bgType;
         bgmSource.clip = bgmClips[(int) bgType];
         bgmSource.volume = volume;
-        bgmSource.Play ();
+        bgmSource.Play();
     }
 
-    public void PlaySFX (SFXType sfxType, float volume = 1f) {
-        AudioSource.PlayClipAtPoint (GetClip (sfxType), Camera.main.transform.position, volume);
+    public void PlaySfx(SfxType sfxType, float volume = 1f) {
+        AudioSource.PlayClipAtPoint(GetClip(sfxType), Camera.main.transform.position, volume);
     }
 
-    public void PlaySFXAtPosition (SFXType sfxType, Vector3 position, float volume = 1f) {
+    public void PlaySfxAtPosition(SfxType sfxType, Vector3 position, float volume = 1f) {
         position.z = Camera.main.transform.position.z;
-        AudioSource.PlayClipAtPoint (GetClip (sfxType), position, volume);
+        AudioSource.PlayClipAtPoint(GetClip(sfxType), position, volume);
     }
 
-    private AudioClip GetClip (SFXType sfxType) {
-        if (sfxType == SFXType.CLICK)
-            return clickClip;
-        else if (sfxType == SFXType.JUMP)
-            return jumpClip;
-        else if (sfxType == SFXType.ENEMY_SHOOT)
-            return enemyShootClip;
-        else if (sfxType == SFXType.DEFEND)
-            return defendClip;
-        else if (sfxType == SFXType.PLAYER_ATTACK)
-            return playerAttackClip;
-        else if (sfxType == SFXType.ENEMY_HIT)
-            return enemyHitClips[Random.Range (0, enemyHitClips.Count)];
-        else if (sfxType == SFXType.NINA_SFX)
-            return lvl1Clips[0];
-        else if (sfxType == SFXType.PAINTING_SFX)
-            return lvl1Clips[1];
-        else if (sfxType == SFXType.SILENCE_SIGN_SFX)
-            return lvl1Clips[2];
-        else if (sfxType == SFXType.SEAT_SFX)
-            return boingClips[Random.Range (0, boingClips.Count)];
-        else if (sfxType == SFXType.DOOR_SFX)
-            return lvl1Clips[3];
-        return clickClip;
+    private AudioClip GetClip(SfxType sfxType) {
+        switch (sfxType) {
+            case SfxType.CLICK_SFX: {
+                return clickClip;
+            }
+            case SfxType.JUMP_SFX: {
+                return jumpClip;
+            }
+            case SfxType.GIGGLE_SFX: {
+                return giggleClip;
+            }
+            case SfxType.SILENCE_SIGN_SFX: {
+                return shushClip;
+            }
+            case SfxType.SEAT_SFX: {
+                return boingClips[Random.Range(0, boingClips.Count)];
+            }
+            case SfxType.DOOR_SFX: {
+                return doorClip;
+            }
+
+            default: return null;
+        }
     }
 }

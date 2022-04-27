@@ -1,30 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class MuteButton : MonoBehaviour {
 
-    SoundManager soundManager;
+    private SoundManager _soundManager;
 
     public Image iconImage;
     public Sprite soundSprite;
     public Sprite muteSprite;
 
     void Start () {
-        soundManager = SoundManager.instance;
+        _soundManager = SoundManager.Instance;
         UpdateIcon ();
     }
 
     void UpdateIcon () {
-        if (AudioListener.volume >= 0.95f)
-            iconImage.sprite = soundSprite;
-        else
-            iconImage.sprite = muteSprite;
+        iconImage.sprite = AudioListener.volume >= 0.95f ? soundSprite : muteSprite;
     }
 
     public void InvertAudio () {
-        soundManager.InvertSound ();
+        _soundManager.InvertSound ();
         UpdateIcon ();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,28 +15,25 @@ public class CanvasFade : MonoBehaviour {
     private Image fadeImage;
 
     #region Properties
-    private Color fadeColor = Color.black;
+    private Color _fadeColor = Color.black;
 
     public Color FadeColor {
-        get { return fadeColor; }
+        get => _fadeColor;
         set {
-            fadeColor.r = value.r;
-            fadeColor.g = value.g;
-            fadeColor.b = value.b;
+            _fadeColor.r = value.r;
+            _fadeColor.g = value.g;
+            _fadeColor.b = value.b;
         }
     }
 
-    private float progress = 0f;
+    private float _progress = 0f;
 
-    public float Progress {
-        get { return progress; }
-    }
+    public float Progress => _progress;
 
-    private bool fading = false;
+    private bool _fading = false;
 
-    public bool Fading {
-        get { return fading; }
-    }
+    public bool Fading => _fading;
+
     #endregion
 
     void Awake () {
@@ -49,9 +45,9 @@ public class CanvasFade : MonoBehaviour {
     }
 
     // Change the Fade alpha
-    public void ChangeFadeAlpha (float alpha) {
-        fadeColor.a = alpha;
-        fadeImage.color = fadeColor;
+    private void ChangeFadeAlpha (float alpha) {
+        _fadeColor.a = alpha;
+        fadeImage.color = _fadeColor;
     }
 
     #region FadeCalls
@@ -71,35 +67,32 @@ public class CanvasFade : MonoBehaviour {
 
     // Fade Function
     IEnumerator FadeImage (bool fadeIn, float duration, float endDelay) {
-        fading = true;
+        _fading = true;
         // Begin Action
         if (OnFadeBegin != null)
             OnFadeBegin (this, fadeIn);
 
         // Counter from 0 to 1
-        for (progress = 0f; progress < 1f; progress += Time.deltaTime / duration) {
+        for (_progress = 0f; _progress < 1f; _progress += Time.deltaTime / duration) {
             if (fadeIn)
-                ChangeFadeAlpha (1f - progress);
+                ChangeFadeAlpha (1f - _progress);
             else
-                ChangeFadeAlpha (progress);
+                ChangeFadeAlpha (_progress);
 
             // Update Action
             if (OnFadeUpdate != null)
-                OnFadeUpdate (this, progress);
+                OnFadeUpdate (this, _progress);
             yield return null;
         }
 
         // Another Update to avoid iteration errors
-        if (fadeIn)
-            ChangeFadeAlpha (0f);
-        else
-            ChangeFadeAlpha (1f);
+        ChangeFadeAlpha(fadeIn ? 0f : 1f);
 
         // Addition delay after the fade
         if (endDelay > 0.001f)
             yield return new WaitForSeconds (endDelay);
 
-        fading = false;
+        _fading = false;
         // End Action
         if (OnFadeEnd != null)
             OnFadeEnd (this, fadeIn);

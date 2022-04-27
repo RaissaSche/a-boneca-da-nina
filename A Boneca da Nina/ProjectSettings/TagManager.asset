@@ -4,20 +4,18 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PlayerAttack
-  - PlayerDefense
-  - Enemy
   - Cloud
   - Ground
   - Tire
   - Ladder
   - Mom
-  - SlowMom
-  - SlowerMom
   - Item
   - FinalBarrier
   - FinalBarrier2
   - MomDoor
+  - MomComesCloser
+  - CommonDoor
+  - SushSign
   layers:
   - Default
   - TransparentFX

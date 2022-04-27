@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,15 +12,15 @@ public class ChangeImage : MonoBehaviour
 
     public int imgNumberCount;
 
-    private SoundManager soundManager;
+    private SoundManager _soundManager;
 
     private void Start()
     {
-        soundManager = SoundManager.instance;
+        _soundManager = SoundManager.Instance;
     }
-    public void changeImages()
+    public void ChangeImages()
     {
-        soundManager.PlaySFX(SoundManager.SFXType.CLICK, 0.8f);
+        _soundManager.PlaySfx(SoundManager.SfxType.CLICK_SFX, 0.8f);
 
         switch (imgNumberCount)
         {
